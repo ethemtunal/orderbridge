@@ -12,3 +12,17 @@ fix:
 check:
     just fix
     mypy .
+
+test-db:
+    docker run --name="orderbridge_test-postgres-$(date +%s)" \
+      -e POSTGRES_PASSWORD=dbpasswd \
+      -e POSTGRES_USER=orderbridge \
+      -e POSTGRES_DB=orderbridge-db \
+      -p 5437:5432 \
+      -d postgres:15 || true
+
+stop-test-db:
+    docker stop $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
+
+rm-test-db:
+    docker rm $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
