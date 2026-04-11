@@ -3,7 +3,12 @@ name = "orderbridge"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.13,<4"
-dependencies = []
+dependencies = [
+    "alembic>=1.18.4",
+    "psycopg2-binary>=2.9.11",
+    "pydantic>=2.12.5",
+    "sqlalchemy>=2.0.49",
+]
 
 [dependency-groups]
 dev = [

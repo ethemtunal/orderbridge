@@ -17,7 +17,7 @@ test-db:
     docker run --name="orderbridge_test-postgres-$(date +%s)" \
       -e POSTGRES_PASSWORD=dbpasswd \
       -e POSTGRES_USER=orderbridge \
-      -e POSTGRES_DB=orderbridge-db \
+      -e POSTGRES_DB=orderbridgedb \
       -p 5437:5432 \
       -d postgres:15 || true
 
@@ -26,3 +26,23 @@ stop-test-db:
 
 rm-test-db:
     docker rm $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
+
+dev-db:
+    docker run --name="orderbridge_test-postgres-$(date +%s)" \
+      -e POSTGRES_PASSWORD=dbpasswd \
+      -e POSTGRES_USER=orderbridge \
+      -e POSTGRES_DB=orderbridgedb \
+      -p 5436:5432 \
+      -d postgres:15 || true
+
+stop-dev-db:
+    docker stop $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
+
+rm-dev-db:
+    docker rm $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
+
+test-env:
+    just stop-test-db rm-test-db stop-dev-db rm-dev-db test-db
+
+dev-env:
+    just stop-test-db rm-test-db stop-dev-db rm-dev-db dev-db
