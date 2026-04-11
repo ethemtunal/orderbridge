@@ -28,7 +28,7 @@ rm-test-db:
     docker rm $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
 
 dev-db:
-    docker run --name="orderbridge_test-postgres-$(date +%s)" \
+    docker run --name="orderbridge_dev-postgres-$(date +%s)" \
       -e POSTGRES_PASSWORD=dbpasswd \
       -e POSTGRES_USER=orderbridge \
       -e POSTGRES_DB=orderbridgedb \
