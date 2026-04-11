@@ -1,0 +1,12 @@
+[project]
+name = "orderbridge"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13,<4"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.0",
+    "ruff>=0.15.10",
+]
