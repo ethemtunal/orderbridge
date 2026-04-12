@@ -13,7 +13,7 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uuid: Mapped[str] = mapped_column(
-        default=str(uuid.uuid4()),
+        default=lambda: str(uuid.uuid4()),
         unique=True,
         nullable=False,
         index=True,
