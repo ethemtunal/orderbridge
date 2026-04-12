@@ -69,7 +69,7 @@ def test_create_order_returns_500_if_user_not_found(mock_place, client):
 
     assert response.status_code == 500
     assert response.json() == {
-        "detail": "Internal server error while placing the order"
+        "message": "Internal server error while placing the order"
     }
 
 

@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, model_validator
 from sqlalchemy.orm import Session
 
@@ -69,7 +70,7 @@ def create_order(
     background_tasks: BackgroundTasks,
     x_user_uuid: str = Header(...),
     db: Session = Depends(get_db),
-) -> OrderEntity:
+) -> OrderEntity | JSONResponse:
     try:
         service = get_order_service(db)
         db_order = service.create_order(x_user_uuid, order.to_order_create())
@@ -77,7 +78,7 @@ def create_order(
         return db_order
     except Exception:
         logger.exception("Error creating order")
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error while placing the order",
+            content={"message": "Internal server error while placing the order"},
         )
