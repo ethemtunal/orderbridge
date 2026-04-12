@@ -19,10 +19,10 @@ class OrderFactory(SQLAlchemyModelFactory):
     uuid = factory.LazyFunction(lambda: str(uuid.uuid4()))
     user_id = factory.LazyAttribute(lambda _: UserFactory.create().id)
     instrument = factory.Faker("bothify", text="DE###########")
-    type = OrderType.MARKET
+    type = OrderType.LIMIT
     side = OrderSide.BUY
     quantity = factory.Faker("random_int", min=1, max=100)
-    limit_price = None
+    limit_price = 1000
     status = OrderStatus.PENDING
     currency = "EUR"
     retry_count = 0

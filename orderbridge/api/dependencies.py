@@ -1,9 +1,12 @@
+import os
 from collections.abc import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-DATABASE_URL = "postgresql://orderbridge:dbpasswd@localhost:5436/orderbridgedb"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgresql://orderbridge:dbpasswd@localhost:5436/orderbridgedb"
+)
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)

@@ -12,6 +12,7 @@ from orderbridge.common.types.order import (
     OrderStatus,
     OrderType,
 )
+from orderbridge.common.types.serialized import SerializedMoney
 from orderbridge.services.order_service import MAX_RETRIES, OrderService
 
 
@@ -27,10 +28,10 @@ def test_create_order_returns_order_entity(order_service):
     user = UserFactory.create()
     order_create = OrderCreate(
         instrument="DE000A0Q4RZ3",
-        type=OrderType.MARKET,
+        type=OrderType.LIMIT,
         side=OrderSide.BUY,
         quantity=10,
-        limit_price=None,
+        limit_price=SerializedMoney("123.123", "EUR"),
         status=OrderStatus.PENDING,
         retry_count=0,
     )

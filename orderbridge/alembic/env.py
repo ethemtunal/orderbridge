@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -13,8 +14,13 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+# Override sqlalchemy.url from DATABASE_URL env var if set
+if os.getenv("DATABASE_URL"):
+    config.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
+
 # add your model's MetaData object here
 # for 'autogenerate' support
+import orderbridge.adapters.database.models.order  # noqa: E402, F401
 import orderbridge.adapters.database.models.user  # noqa: E402, F401
 from orderbridge.adapters.database.models.base import Base  # noqa: E402
 

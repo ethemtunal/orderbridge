@@ -5,7 +5,6 @@ from pydantic import BaseModel, ConfigDict
 
 class UserCreate(BaseModel):
     name: str
-    uuid: str
 
 
 class UserEntity(UserCreate):
@@ -14,3 +13,4 @@ class UserEntity(UserCreate):
     id: int
     created_at: datetime
     updated_at: datetime
+    uuid: str

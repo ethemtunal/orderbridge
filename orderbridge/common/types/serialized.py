@@ -4,6 +4,7 @@
 from datetime import datetime
 from typing import Annotated
 
+from pydantic import WithJsonSchema
 from pydantic.functional_serializers import PlainSerializer
 
 from orderbridge.common.finance import Money
@@ -22,5 +23,15 @@ SerializedMoney = Annotated[
     PlainSerializer(
         lambda x: {"amount": float(x.amount), "currency": x.currency.code},
         return_type=dict,
+    ),
+    WithJsonSchema(
+        {
+            "type": "object",
+            "properties": {
+                "amount": {"type": "number"},
+                "currency": {"type": "string"},
+            },
+            "required": ["amount", "currency"],
+        }
     ),
 ]

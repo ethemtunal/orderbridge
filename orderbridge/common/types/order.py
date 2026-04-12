@@ -61,6 +61,19 @@ class OrderCreate(BaseModel):
 class OrderWithUser(OrderCreate):
     user_id: int
 
+    @classmethod
+    def from_order_create(cls, order: "OrderCreate", user_id: int) -> "OrderWithUser":
+        return OrderWithUser(
+            instrument=order.instrument,
+            type=order.type,
+            side=order.side,
+            quantity=order.quantity,
+            limit_price=order.limit_price,
+            status=order.status,
+            retry_count=order.retry_count,
+            user_id=user_id,
+        )
+
 
 class OrderEntity(OrderWithUser):
     model_config = ConfigDict(from_attributes=True)

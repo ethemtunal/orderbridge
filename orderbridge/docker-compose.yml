@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: orderbridge
+      POSTGRES_PASSWORD: dbpasswd
+      POSTGRES_DB: orderbridgedb
+    ports:
+      - "5436:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orderbridge -d orderbridgedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://orderbridge:dbpasswd@postgres:5432/orderbridgedb
+      PYTHONPATH: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "cd /app/orderbridge &&
+             uv run alembic --name orderbridge upgrade head &&
+             uv run uvicorn orderbridge.main:app --host 0.0.0.0 --port 8000"

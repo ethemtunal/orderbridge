@@ -25,7 +25,7 @@ class OrderService:
             logger.info(f"Changing order status to {OrderStatus.PENDING}")
             order.status = OrderStatus.PENDING
         db_order = self.order_repository.insert(
-            OrderWithUser(user_id=user.id, **order.model_dump())
+            OrderWithUser.from_order_create(order=order, user_id=user.id)
         )
         logger.info(f"Order {db_order.uuid} created for user {user_uuid}")
         return db_order

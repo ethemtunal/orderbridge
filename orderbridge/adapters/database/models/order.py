@@ -91,7 +91,9 @@ class Order(Base):
             ),
             status=order.status,
             currency=(
-                order.limit_price.currency if order.limit_price is not None else None
+                str(order.limit_price.currency)
+                if order.limit_price is not None
+                else None
             ),
             retry_count=order.retry_count,
         )
