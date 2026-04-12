@@ -25,7 +25,6 @@ class OrderType(StrEnum):
 class OrderCreate(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    user_id: int
     instrument: str
     type: OrderType
     side: OrderSide
@@ -59,10 +58,24 @@ class OrderCreate(BaseModel):
         return self
 
 
-class OrderEntity(OrderCreate):
-    model_config = ConfigDict(arbitrary_types_allowed=True, from_attributes=True)
+class OrderWithUser(OrderCreate):
+    user_id: int
+
+
+class OrderEntity(OrderWithUser):
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
     uuid: str
     created_at: datetime
     updated_at: datetime
+
+
+class ProcessOrderEventData(BaseModel):
+    user_uuid: str
+    order_uuid: str
+    attempt: int
+
+
+class ProcessOrderMessageBody(BaseModel):
+    event_data: ProcessOrderEventData

@@ -7,6 +7,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from orderbridge.adapters.database import models
+from orderbridge.adapters.queues.rabbitmq_queue_client import RabbitMQQueueClient
+
+RABBITMQ_HOST = "localhost"
+RABBITMQ_PORT = 5673
+RABBITMQ_USER = "orderbridge"
+RABBITMQ_PASS = "rabbitpasswd"
 
 TEST_SESSION: Session | None = None
 
@@ -55,6 +61,17 @@ def get_test_db_session() -> Generator[Session, None, None]:
 def orderbridge_db():
     with get_test_db_session() as session:
         yield session
+
+
+@pytest.fixture(scope="function")
+def rabbitmq_client():
+    client = RabbitMQQueueClient(
+        host=RABBITMQ_HOST,
+        port=RABBITMQ_PORT,
+        username=RABBITMQ_USER,
+        password=RABBITMQ_PASS,
+    )
+    yield client
 
 
 def get_session_factory() -> Session:

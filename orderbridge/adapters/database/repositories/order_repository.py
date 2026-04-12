@@ -1,11 +1,11 @@
 from orderbridge.adapters.database import models
 from orderbridge.adapters.database.repositories.base_repository import BaseRepo
 from orderbridge.common.exceptions import NotFound
-from orderbridge.common.types import OrderCreate, OrderEntity
+from orderbridge.common.types import OrderEntity, OrderWithUser
 
 
 class DBOrderRepo(BaseRepo):
-    def insert(self, values: OrderCreate) -> OrderEntity:
+    def insert(self, values: OrderWithUser) -> OrderEntity:
         order = models.Order(**values.model_dump())
         self.session.add(order)
         self.session.flush()

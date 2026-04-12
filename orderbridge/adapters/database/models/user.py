@@ -1,12 +1,15 @@
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from orderbridge.adapters.database.models.base import Base
-from orderbridge.adapters.database.models.order import Order
 from orderbridge.common.types import UserEntity
+
+if TYPE_CHECKING:
+    from orderbridge.adapters.database.models.order import Order
 
 
 class User(Base):

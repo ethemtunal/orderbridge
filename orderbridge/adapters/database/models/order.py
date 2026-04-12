@@ -14,11 +14,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from orderbridge.adapters.database.models.base import Base
 from orderbridge.adapters.database.models.user import User
 from orderbridge.common.types import (
-    OrderCreate,
     OrderEntity,
     OrderSide,
     OrderStatus,
     OrderType,
+    OrderWithUser,
 )
 from orderbridge.common.utils import money_or_none
 
@@ -77,7 +77,7 @@ class Order(Base):
         )
 
     @classmethod
-    def from_entity(cls, order: OrderCreate) -> "Order":
+    def from_entity(cls, order: OrderWithUser) -> "Order":
         return cls(
             user_id=order.user_id,
             instrument=order.instrument,

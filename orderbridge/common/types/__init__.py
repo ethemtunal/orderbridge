@@ -4,6 +4,7 @@ from orderbridge.common.types.order import (  # noqa: F401
     OrderSide,
     OrderStatus,
     OrderType,
+    OrderWithUser,
 )
 from orderbridge.common.types.serialized import (  # noqa: F401
     SerializedDatetime,
