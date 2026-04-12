@@ -33,7 +33,6 @@ def upgrade() -> None:
         sa.Column("limit_price", sa.BigInteger(), nullable=True),
         sa.Column("status", sa.String(), nullable=False),
         sa.Column("currency", sa.String(), nullable=True),
-        sa.Column("retry_count", sa.Integer(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
         sa.CheckConstraint(

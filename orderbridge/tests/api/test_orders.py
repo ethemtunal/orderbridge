@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from orderbridge.api.dependencies import get_db
+from orderbridge.common.datagen.order_factory import OrderFactory
 from orderbridge.common.datagen.user_factory import UserFactory
 from orderbridge.common.types.order import OrderStatus
 from orderbridge.main import app
@@ -24,10 +25,21 @@ def order_payload(**overrides):
         "quantity": 10,
         "limit_price": 123.32,
         "status": "pending",
-        "retry_count": 0,
         "currency": "EUR",
         **overrides,
     }
+
+
+def test_get_orders_returns_orders_for_user(client):
+    user = UserFactory.create()
+    order = OrderFactory.create(user_id=user.id)
+
+    response = client.get("/orders", headers={"x-user-uuid": user.uuid})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["uuid"] == order.uuid
 
 
 @patch("orderbridge.services.order_service.place_order")

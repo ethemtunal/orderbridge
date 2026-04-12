@@ -33,7 +33,6 @@ def test_create_order_returns_order_entity(order_service):
         quantity=10,
         limit_price=SerializedMoney("123.123", "EUR"),
         status=OrderStatus.PENDING,
-        retry_count=0,
     )
 
     result = order_service.create_order(user.uuid, order_create)
@@ -52,7 +51,6 @@ def test_create_order_with_failed_status(order_service):
         quantity=10,
         limit_price=None,
         status=OrderStatus.FAILED,
-        retry_count=0,
     )
 
     result = order_service.create_order(user.uuid, order_create)
@@ -70,11 +68,36 @@ def test_create_order_raises_if_user_not_found(order_service):
         quantity=10,
         limit_price=None,
         status=OrderStatus.PENDING,
-        retry_count=0,
     )
 
     with pytest.raises(NotFound):
         order_service.create_order("non-existent-uuid", order_create)
+
+
+def test_get_orders_by_user_returns_only_user_orders(order_service):
+    user = UserFactory.create()
+    other_user = UserFactory.create()
+    order1 = OrderFactory.create(user=user)
+    order2 = OrderFactory.create(user=user)
+    OrderFactory.create(user=other_user)
+
+    results = order_service.get_orders_by_user(user.uuid)
+
+    assert len(results) == 2
+    assert {r.uuid for r in results} == {order1.uuid, order2.uuid}
+
+
+def test_get_orders_by_user_returns_empty_list_when_no_orders(order_service):
+    user = UserFactory.create()
+
+    results = order_service.get_orders_by_user(user.uuid)
+
+    assert results == []
+
+
+def test_get_orders_by_user_raises_if_user_not_found(order_service):
+    with pytest.raises(NotFound):
+        order_service.get_orders_by_user("non-existent-uuid")
 
 
 @patch("orderbridge.services.order_service.time.sleep")

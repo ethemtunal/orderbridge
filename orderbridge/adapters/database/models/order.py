@@ -45,7 +45,6 @@ class Order(Base):
     limit_price: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
     status: Mapped[str] = mapped_column(String, nullable=False, default="pending")
     currency: Mapped[str | None] = mapped_column(String, nullable=True, default="EUR")
-    retry_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
@@ -71,7 +70,6 @@ class Order(Base):
             quantity=self.quantity,
             limit_price=money_or_none(self.limit_price, self.currency),
             status=OrderStatus(self.status),
-            retry_count=self.retry_count,
             created_at=self.created_at,
             updated_at=self.updated_at,
         )
@@ -95,5 +93,4 @@ class Order(Base):
                 if order.limit_price is not None
                 else None
             ),
-            retry_count=order.retry_count,
         )

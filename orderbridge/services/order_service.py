@@ -11,7 +11,7 @@ from orderbridge.common.types.order import OrderStatus
 
 logger = logging.getLogger(__name__)
 
-MAX_RETRIES = 5
+MAX_RETRIES = 3
 
 
 class OrderService:
@@ -29,6 +29,10 @@ class OrderService:
         )
         logger.info(f"Order {db_order.uuid} created for user {user_uuid}")
         return db_order
+
+    def get_orders_by_user(self, user_uuid: str) -> list[OrderEntity]:
+        user = self.user_repository.get_by_uuid(user_uuid)
+        return self.order_repository.get_by_user(user.id)
 
     def place_order_with_retry(self, order_uuid: str) -> None:
         for attempt in range(1, MAX_RETRIES + 1):

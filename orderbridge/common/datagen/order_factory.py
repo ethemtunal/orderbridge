@@ -25,6 +25,5 @@ class OrderFactory(SQLAlchemyModelFactory):
     limit_price = 1000
     status = OrderStatus.PENDING
     currency = "EUR"
-    retry_count = 0
     created_at = factory.LazyFunction(datetime.utcnow)
     updated_at = factory.LazyFunction(datetime.utcnow)

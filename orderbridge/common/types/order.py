@@ -31,7 +31,6 @@ class OrderCreate(BaseModel):
     quantity: int
     limit_price: SerializedMoney | None
     status: OrderStatus
-    retry_count: int
 
     @field_validator("quantity")
     @classmethod
@@ -70,7 +69,6 @@ class OrderWithUser(OrderCreate):
             quantity=order.quantity,
             limit_price=order.limit_price,
             status=order.status,
-            retry_count=order.retry_count,
             user_id=user_id,
         )
 

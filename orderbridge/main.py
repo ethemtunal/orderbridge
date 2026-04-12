@@ -1,8 +1,12 @@
+import logging
+
 import uvicorn
 from fastapi import FastAPI
 
 from orderbridge.api.orders import router as orders_router
 from orderbridge.api.users import router as users_router
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="orderbridge")
 app.include_router(orders_router)

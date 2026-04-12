@@ -44,7 +44,22 @@ class OrderRequest(BaseModel):
             quantity=self.quantity,
             limit_price=limit_price,
             status=OrderStatus.PENDING,
-            retry_count=0,
+        )
+
+
+@router.get("/orders", response_model=list[OrderEntity])
+def get_orders(
+    x_user_uuid: str = Header(...),
+    db: Session = Depends(get_db),
+) -> list[OrderEntity]:
+    try:
+        service = get_order_service(db)
+        return service.get_orders_by_user(x_user_uuid)
+    except Exception:
+        logger.exception("Error fetching orders")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error while fetching orders",
         )
 
 

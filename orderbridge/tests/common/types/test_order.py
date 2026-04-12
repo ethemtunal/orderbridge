@@ -19,7 +19,6 @@ def valid_market_order(**overrides):
         "quantity": 10,
         "limit_price": None,
         "status": OrderStatus.PENDING,
-        "retry_count": 0,
         **overrides,
     }
 
@@ -33,7 +32,6 @@ def valid_limit_order(**overrides):
         "quantity": 10,
         "limit_price": Money(100, "EUR"),
         "status": OrderStatus.PENDING,
-        "retry_count": 0,
         **overrides,
     }
 
