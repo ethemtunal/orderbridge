@@ -139,6 +139,13 @@ class RabbitMQQueueClient(QueuingClient):
 
         return messages
 
+    def purge_queue(self, topic: str) -> None:
+        self._ensure_connection()
+        self._declare_queue(topic)
+        assert self._channel is not None
+        self._channel.queue_purge(queue=topic)
+        self._unacked.clear()
+
     def delete_message(self, topic: str, receipt_handle: str) -> None:
         delivery_tag = self._unacked.get(receipt_handle)
         if delivery_tag is None:

@@ -65,12 +65,19 @@ def orderbridge_db():
 
 @pytest.fixture(scope="function")
 def rabbitmq_client():
+    from orderbridge.adapters.queues.rabbitmq_queue_client import PROCESS_ORDER_TOPIC
+
+    all_topics = [PROCESS_ORDER_TOPIC]
+
     client = RabbitMQQueueClient(
         host=RABBITMQ_HOST,
         port=RABBITMQ_PORT,
         username=RABBITMQ_USER,
         password=RABBITMQ_PASS,
     )
+    # clean all the queues before tests
+    for topic in all_topics:
+        client.purge_queue(topic)
     yield client
 
 
