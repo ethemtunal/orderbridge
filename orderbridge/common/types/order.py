@@ -60,6 +60,8 @@ class OrderCreate(BaseModel):
 
 
 class OrderEntity(OrderCreate):
+    model_config = ConfigDict(arbitrary_types_allowed=True, from_attributes=True)
+
     id: int
     uuid: str
     created_at: datetime

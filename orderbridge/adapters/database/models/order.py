@@ -11,9 +11,15 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from orderbridge.adapters.database.models import User
 from orderbridge.adapters.database.models.base import Base
-from orderbridge.common.types import OrderEntity, OrderSide, OrderStatus, OrderType
+from orderbridge.adapters.database.models.user import User
+from orderbridge.common.types import (
+    OrderCreate,
+    OrderEntity,
+    OrderSide,
+    OrderStatus,
+    OrderType,
+)
 from orderbridge.common.utils import money_or_none
 
 
@@ -28,7 +34,7 @@ class Order(Base):
         index=True,
     )
     user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="RESTRICT"),
+        ForeignKey("user.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
     )
@@ -43,7 +49,7 @@ class Order(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    user: Mapped["User"] = relationship("User", back_populates="order")
+    user: Mapped["User"] = relationship("User", back_populates="orders")
 
     __table_args__ = (
         CheckConstraint(
@@ -68,4 +74,24 @@ class Order(Base):
             retry_count=self.retry_count,
             created_at=self.created_at,
             updated_at=self.updated_at,
+        )
+
+    @classmethod
+    def from_entity(cls, order: OrderCreate) -> "Order":
+        return cls(
+            user_id=order.user_id,
+            instrument=order.instrument,
+            type=order.type,
+            side=order.side,
+            quantity=order.quantity,
+            limit_price=(
+                order.limit_price.amount_in_mill
+                if order.limit_price is not None
+                else None
+            ),
+            status=order.status,
+            currency=(
+                order.limit_price.currency if order.limit_price is not None else None
+            ),
+            retry_count=order.retry_count,
         )
