@@ -4,6 +4,7 @@ from orderbridge.adapters.database.repositories import DBOrderRepo
 from orderbridge.common.datagen.order_factory import OrderFactory
 from orderbridge.common.datagen.user_factory import UserFactory
 from orderbridge.common.exceptions import NotFound
+from orderbridge.common.types.order import OrderStatus
 
 
 def test_get_order_by_id(orderbridge_db):
@@ -46,3 +47,11 @@ def test_get_orders_by_user_returns_empty(orderbridge_db):
     order_repo = DBOrderRepo(orderbridge_db)
     orders = order_repo.get_by_user(999999)
     assert orders == []
+
+
+def test_update_status(orderbridge_db):
+    order = OrderFactory.create(status=OrderStatus.FAILED)
+    order_repo = DBOrderRepo(orderbridge_db)
+    order_repo.update_status(order.uuid, OrderStatus.PLACED)
+    fetched = order_repo.get_by_uuid(order.uuid)
+    assert fetched.status == OrderStatus.PLACED

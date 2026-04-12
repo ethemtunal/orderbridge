@@ -14,3 +14,7 @@ class OrderBridgeException(Exception):
 
 class NotFound(OrderBridgeException):
     status_code = HTTPStatus.NOT_FOUND
+
+
+class OrderPlacementError(OrderBridgeException):
+    status_code = HTTPStatus.SERVICE_UNAVAILABLE

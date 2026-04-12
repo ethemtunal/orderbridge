@@ -20,19 +20,12 @@ test-db:
       -e POSTGRES_DB=orderbridgedb \
       -p 5437:5432 \
       -d postgres:15 || true
-    docker run --name="orderbridge_test-rabbitmq-$(date +%s)" \
-      -e RABBITMQ_DEFAULT_USER=orderbridge \
-      -e RABBITMQ_DEFAULT_PASS=rabbitpasswd \
-      -p 5673:5672 \
-      -d rabbitmq:3-management || true
 
 stop-test-db:
     docker stop $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
-    docker stop $(docker ps -a -q --filter="name=orderbridge_test-rabbitmq") || true
 
 rm-test-db:
     docker rm $(docker ps -a -q --filter="name=orderbridge_test-postgres") || true
-    docker rm $(docker ps -a -q --filter="name=orderbridge_test-rabbitmq") || true
 
 dev-db:
     docker run --name="orderbridge_dev-postgres-$(date +%s)" \
