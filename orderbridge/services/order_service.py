@@ -44,12 +44,13 @@ class OrderService:
             except OrderPlacementError:
                 logger.warning(f"Order {order_uuid} failed on attempt {attempt}")
                 if attempt < MAX_RETRIES:
-                    time.sleep(0.5 * (2 ** (attempt - 1)))
+                    time.sleep(0.5)
 
         self.order_repository.update_status(order_uuid, OrderStatus.FAILED)
         logger.error(
             f"Order {order_uuid} permanently failed after {MAX_RETRIES} attempts"
         )
+        raise OrderPlacementError(f"Order {order_uuid} cannot be placed")
 
 
 def get_order_service(db_session: Session) -> OrderService:

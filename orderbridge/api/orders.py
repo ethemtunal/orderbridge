@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, model_validator
 from sqlalchemy.orm import Session
@@ -67,14 +67,13 @@ def get_orders(
 @router.post("/orders", status_code=201, response_model=OrderEntity)
 def create_order(
     order: OrderRequest,
-    background_tasks: BackgroundTasks,
     x_user_uuid: str = Header(...),
     db: Session = Depends(get_db),
 ) -> OrderEntity | JSONResponse:
     try:
         service = get_order_service(db)
         db_order = service.create_order(x_user_uuid, order.to_order_create())
-        background_tasks.add_task(service.place_order_with_retry, db_order.uuid)
+        service.place_order_with_retry(db_order.uuid)
         return db_order
     except Exception:
         logger.exception("Error creating order")

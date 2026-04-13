@@ -138,8 +138,8 @@ def test_place_order_with_retry_marks_failed_after_max_retries(
 ):
     order = OrderFactory.create()
     mock_place.side_effect = OrderPlacementError("fail")
-
-    order_service.place_order_with_retry(order.uuid)
+    with pytest.raises(OrderPlacementError):
+        order_service.place_order_with_retry(order.uuid)
 
     assert mock_place.call_count == MAX_RETRIES
     updated = orderbridge_db.get(type(order), order.id)
